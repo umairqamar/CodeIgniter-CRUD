@@ -1,0 +1,93 @@
+How to Create Virtual Host
+_______________________________
+
+http://austin.passy.co/2012/setting-up-virtual-hosts-wordpress-multisite-with-xampp-on-windows-7/
+http://foundationphp.com/tutorials/apache_vhosts.php
+
+Enable virtual Host and .htaccess(mod_rewrite) 
+__________________________________________________
+
+Navigate to "C:/xampp/apache/conf" or wherever your XAMPP files are located.
+Open the file named ""httpd.conf" with a text editor.Uncomment line no 
+
+# Virtual hosts
+Include "conf/extra/httpd-vhosts.conf"
+
+Uncomment line 130: (to enable .htaccess)
+
+LoadModule rewrite_module modules/mod_rewrite.so
+
+
+
+Make Virtual Host
+___________________
+
+First I am going to assume you’re using a Windows machine and have XAMPP installed.
+Open the XAMPP control panel application and stop Apache. Be aware that late Windows machines might run it as a service, so check the box to the left of the Apache module.
+Navigate to C:/xampp/apache/conf/extra or wherever your XAMPP files are located.
+Open the file named httpd-vhosts.conf with a text editor.
+Around line 19 find # NameVirtualHost *:80 and uncomment or remove the hash.
+At the very bottom of the file paste the following code:
+
+<VirtualHost *:80>
+    ServerAdmin admin@codeigniter.local
+    DocumentRoot "C:/xampp/htdocs/codeigniter"
+    ServerName codeigniter.local
+    ErrorLog "C:/xampp/htdocs/codeigniter/error.log"
+    CustomLog "C:/xampp/htdocs/codeigniter/access.log" combined
+</VirtualHost>:
+
+Restart Apache 
+
+
+Make Host Entry into Windows
+__________________________________________________
+
+Next head over to your Windows host file to edit your HOSTS. 
+This file will be located at C:/Windows/System32/drivers/etc/hosts, where hosts is the file. Open it with notepad.
+Look for
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+
+127.0.0.1       localhost 
+127.0.0.1       codeigniter.local
+
+OR
+
+127.0.0.1       localhost codeigniter.local
+
+.htaccess file to remove index.ophp from urls in codeigniter
+_______________________________________________________________
+
+
+https://ellislab.com/expressionengine/user-guide/urls/remove_index.php.html
+
+Create .htaccess file in root directory of your website (or copy it from application folder).
+
+open the new .htaccess file and write this code into it.
+
+<IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /
+
+        # Removes index.php from ExpressionEngine URLs
+        RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
+        RewriteCond %{REQUEST_URI} !/system/.* [NC]
+        RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,NE,L]
+
+        # Directs all EE web requests through the site index file
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ /index.php/$1 [L]
+</IfModule>
+
+
+Validation\
+____________________
+http://jqueryvalidation.org/
+
+
+
+
+
+
